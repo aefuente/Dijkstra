@@ -143,7 +143,7 @@ public class Display {
                 color = new Color(0, 0, 0);
                 weight_text = new JLabel("Weight");
                 weight_text.setText(Integer.toString(weight));
-                weight_text.setBounds((int) x, (int) y, 40, 15);
+                weight_text.setBounds((int) x, (int) y, 40, 20);
                 weight_text.setBackground(new Color(255, 255, 255));
                 weight_text.setOpaque(false);
             }
@@ -203,8 +203,8 @@ public class Display {
                 Circles[num1].clickcount = 0;
                 Circles[num2].clickcount = 0;
 
-                Graph.createNode(Circles[num1].name, Circles[num2].name, Lines[lncount].weight);
-                Graph.PrintNodes();
+                Graph.createNode(Circles[num1].name - 'a', Circles[num2].name - 'a', Lines[lncount].weight);
+                //Graph.PrintNodes();
                 lncount++;
             }
 
@@ -227,7 +227,7 @@ public class Display {
                         else {
                             Graph.end = Circles[i].name;
                             System.out.println("start: " + Graph.start + " End: " + Graph.end);
-
+                            Graph.ShortestPath();
                         }
                     }
                 }

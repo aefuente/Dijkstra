@@ -1,32 +1,68 @@
 import java.util.*;
 
 class DijkstraPQ{
-    private int dist[];
-    private Set<Character> settled;
+    int dist[];
+    private Set<Integer> settled;
     private PriorityQueue<Node> pq;
     private int vert;
+    List<List<Node>> adj;
 
     public DijkstraPQ(int vert){
         this.vert = vert;
         dist = new int[vert];
-        settled = new HashSet<Character>();
+        settled = new HashSet<Integer>();
         pq = new PriorityQueue<Node>(vert,new Node());
     }
-    public void Dijkstra(Node[][] adj, char src){
+    public void Dijkstra(List<List<Node>> adj, int src){
+        this.adj = adj;
+        for (int i = 0; i < vert; i++)
+            dist[i] = Integer.MAX_VALUE;
 
+        pq.add(new Node(src, 0));
+
+        dist[src] = 0;
+
+        while (settled.size() != vert){
+
+            int u = pq.remove().name;
+
+            settled.add(u);
+
+            Neighbours(u);
+        }
+
+    }
+
+    private void Neighbours(int u){
+        int weightDistance = -1;
+        int newDistance = -1;
+
+        for (int i = 0; i < adj.get(u).size(); i++){
+            Node v = adj.get(u).get(i);
+
+            if (!settled.contains(v.name)){
+                weightDistance = v.weight;
+                newDistance = dist[u] + weightDistance;
+
+                if(newDistance < dist[v.name])
+                    dist[v.name] = newDistance;
+                pq.add(new Node(v.name, dist[v.name]));
+            }
+
+        }
     }
 
 }
 
 
 class Node implements Comparator<Node>{
-  char next;
+  int name;
   int weight;
   Node(){
   }
 
-  Node(char name, int weight){
-      next = name;
+  Node(int name, int weight){
+      this.name = name;
       this.weight = weight;
   }
 
@@ -41,49 +77,50 @@ class Node implements Comparator<Node>{
 };
 
 class Nodes{
-    private final
-    int GRAPH_SIZE = 10;
-    int CONNECTIONS = 9;
     public
     char start= ' ';
     char end = ' ';
     // We have max 10 nodes and 9 connections perNode;
-    Node[][] graph = new Node[10][9];
+    List<List<Node>> graph = new ArrayList<List<Node>>();
     Nodes(){
-        for (int i = 0; i < GRAPH_SIZE; i ++)
-            for (int k = 0; k < CONNECTIONS; k++)
-                graph[i][k] = null;
+        //for (int i = 0; i < GRAPH_SIZE; i ++)
+        graph.add(new ArrayList<Node>());
+
     }
 
 
-    boolean createNode(char origin, char destination, int weight){
-        for (int i = 0; i < CONNECTIONS; i ++) {
-            if (graph[origin - 'a'][i] == null) {
-                graph[origin - 'a'][i] = new Node(destination, weight);
-                break;
-            }
-        }
-        for (int i = 0; i < CONNECTIONS; i ++) {
-            if (graph[destination - 'a'][i] == null) {
-                graph[destination - 'a'][i] = new Node(origin, weight);
-                break;
-            }
-        }
+    boolean createNode(int origin, int destination, int weight){
+        while(origin >= graph.size()-1 || destination >= graph.size() -1)
+            graph.add(new ArrayList<Node>());
+
+        graph.get(origin).add(new Node(destination, weight));
+        graph.get(destination).add(new Node(origin, weight));
 
         return true;
     }
 
     void PrintNodes(){
-        for (int i = 0; i < GRAPH_SIZE; i ++)
-            for (int k = 0; k < CONNECTIONS; k++)
-                if (graph[i][k] != null) {
-                    System.out.println((char)('a' + i) + " " + graph[i][k].next + " " + graph[i][k].weight + " ");
-                }
+        for (int i = 0; i < graph.size(); i ++)
+            for (int k = 0; k < graph.get(i).size(); k++)
+                    System.out.println((char)('a' + i) + " " + (char)(graph.get(i).get(k).name + 'a') + " " + graph.get(i).get(k).weight + " ");
         System.out.println();
+    }
+    void ShortestPath(){
+        //int V = graph.size();
+        int V =  graph.size()-1;
+        System.out.println(graph.size());
+        int source = start - 'a';
+        DijkstraPQ dpq = new DijkstraPQ(V);
+        dpq.Dijkstra(graph, source);
+        System.out.println("The shortest path from node : ");
+        for (int i = 1; i < dpq.dist.length; i ++)
+            System.out.println((char)(source + 'a') + " to " + (char)(i + 'a') + " is "  + dpq.dist[i]);
     }
 
 
 }
+
+
 
 
 
