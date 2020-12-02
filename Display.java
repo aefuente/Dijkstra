@@ -12,7 +12,9 @@ import java.util.concurrent.*;
 
 
 public class Display {
-        Semaphore update = new Semaphore(1);
+
+        public int MAP_SIZE = 10;
+
         class Controller implements MouseListener {
             Model model;
             View view;
@@ -24,8 +26,8 @@ public class Display {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                model.onclick(e.getX(), e.getY() - 25);
-                update.release();
+                model.update(e.getX(), e.getY() - 25);
+                view.repaint();
             }
 
             @Override
@@ -33,10 +35,9 @@ public class Display {
             @Override
             public void mouseClicked(MouseEvent e) { }
             @Override
-            public void mouseEntered(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) { }
             @Override
             public void mouseExited(MouseEvent e) { }
-
 
         }
 
@@ -154,7 +155,6 @@ public class Display {
         }
 
         public class Model {
-            int MAP_SIZE;
             Circle[] Circles;
             Line[] Lines;
             Nodes Graph;
@@ -165,7 +165,6 @@ public class Display {
             Model() {
                 count = 0;
                 lncount = 0;
-                MAP_SIZE = 10;
                 Circles = new Circle[MAP_SIZE];
                 ending = false;
                 Lines = new Line[90];
@@ -209,7 +208,7 @@ public class Display {
                 lncount++;
             }
 
-            public void onclick(int x, int y){
+            public void update(int x, int y){
                 if(ending){
                     SetStartEnd(x,y);
                 }
@@ -327,20 +326,6 @@ public class Display {
                 this.setVisible(true);
             }
 
-            void run() {
-                while (true) {
-                    System.out.println("Updated");
-                    //controller.update();
-                    view.repaint();
-                    try {
-                        update.acquire();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        System.out.println("Error on screen refresh... Exiting...");
-                        System.exit(1);
-                    }
-                }
-            }
         }
 
     }
