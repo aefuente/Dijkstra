@@ -3,32 +3,6 @@ import java.awt.*;
 import java.util.Random;
 
 public class Shapes {
-    public static class Circle {
-        int x, y, clickcount;
-        char name;
-        Color color;
-        JLabel text;
-
-        Circle(int x, int y, int count) {
-            this.x = x;
-            this.y = y;
-            this.clickcount = 0;
-            color = new Color(0, 0, 0);
-            name = (char) ('a' + count);
-            text = new JLabel("name");
-            text.setText(Character.toString(name));
-            text.setBounds(x - 5, y - 10, 10, 20);
-        }
-
-        void Draw(Graphics g) {
-            if (clickcount == 0) {
-                color = new Color(0, 255, 255);
-            } else
-                color = new Color(255, 100, 0);
-            g.setColor(color);
-            g.fillOval(x - 25, y - 25, 50, 50);
-        }
-    }
 
     public static class Line {
         int x1, y1, x2, y2;
@@ -112,6 +86,40 @@ public class Shapes {
         void Draw(Graphics g) {
             g.setColor(color);
             g.drawLine(x1, y1, x2, y2);
+        }
+    }
+
+    public static class Circle {
+        int x, y, clickcount;
+        char name;
+        Color color;
+        JLabel text;
+        Circle(int x, int y, int count) {
+            this.x = x;
+            this.y = y;
+            this.clickcount = 0;
+            color = new Color(0, 255, 255);
+            name = (char) ('a' + count);
+            text = new JLabel("name");
+            text.setText(Character.toString(name));
+            text.setBounds(x - 5, y - 10, 10, 20);
+        }
+        void SetRed(){
+            color = new Color(255, 0,0);
+        }
+
+        void SetOrange(){
+            color = new Color(255,100,0);
+        }
+
+        void Draw(Graphics g) {
+            if (clickcount == 0) {
+                //color = new Color(0, 255, 255);
+            }
+
+
+            g.setColor(color);
+            g.fillOval(x - 25, y - 25, 50, 50);
         }
     }
 }

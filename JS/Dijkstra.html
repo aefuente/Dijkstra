@@ -1,0 +1,463 @@
+
+<html>
+<head><title>Dijkstras! </title></head>
+<body>
+<br>
+<canvas id="myCanvas" width="500" height="475" style="border:1px solid #cccccc;">
+    <script type="text/javascript">
+        class Line {
+            constructor(x1,y1,x2,y2){
+                this.x1 = x1;
+                this.x2 = x2;
+                this.y1 = y1;
+                this.y2 = y2;
+                this.weight = Math.floor(Math.random() * 20);
+                this.connects = []
+                this.txtcords = this.textcords();
+            }
+
+            textcords(){
+                let x;
+                let y;
+                let slope;
+                let slopeinv;
+                let intercept;
+                let midpoint = [];
+                midpoint.push((this.x2 + this.x1)/2);
+                midpoint.push(-(this.y2+this.y1)/2);
+
+                if(this.x2 > this.x1)
+                    slope = -((this.y2 - this.y1) / (this.x2 - this.x1));
+                else
+                    slope = -((this.y1 - this.y2) / (this.x1 - this.x2));
+
+                slopeinv = -Math.pow(slope,-1);
+
+                intercept = midpoint[1] - (slopeinv * midpoint[0]);
+
+                if (slopeinv === Infinity){
+                    x = midpoint[0];
+                    y = midpoint[1];
+                }else {
+                    let a = (1 + (slopeinv * slopeinv));
+                    let b = (-(2 * midpoint[0]) + ( 2 * slopeinv * intercept) - (2 * midpoint[1] * slopeinv));
+                    let c = (Math.pow(midpoint[0],2) + Math.pow(intercept,2) + Math.pow(midpoint[1], 2) - (2 * intercept * midpoint[1]) - 625);//225
+                    let quadratic = Math.sqrt(Math.pow(b, 2) - (4 * a * c));
+
+                    if (midpoint[0] > 250) {
+                        x = (-b + quadratic) / (2 * a);
+                        y = -((slopeinv * x) + intercept);
+                    } else {
+                        x = (-b - quadratic) / (2 * a);
+                        // A short fix until i adjust the numbers to print from the middle.
+                        y = -((slopeinv * x) + intercept) - 7;
+                        x = x - 5;
+                    }
+                    return [x,y];
+                }
+            }
+        }
+
+        class Circle {
+            constructor(x, y, count) {
+                this.x = x;
+                this.y = y;
+                this.clickcount = 0;
+                this.color = 'rgb(0, 255, 255)';
+                this.name = String.fromCharCode(97 + count);
+                this.text = name;
+            }
+
+            setRed(){
+                this.color = 'rgb(255,0,0)';
+            }
+
+            setOrange(){
+                this.color = 'rgb(255,100,0)';
+            }
+            setBlue(){
+                this.color = 'rgb(0,255,255)';
+            }
+        }
+
+        class Graph {
+            constructor(){
+                this.start = ' ';
+                this.end = ' ';
+                this.nodes = [[]];
+                this.nodes.push([]);
+            }
+
+            createNode(origin, destination, weight){
+                while(origin >= this.nodes.length-1 || destination >= this.nodes.length-1){
+                    this.nodes.push([]);
+                }
+                this.nodes[origin].push(new Node(destination, weight));
+                this.nodes[destination].push(new Node(origin, weight));
+            }
+            PrintNodes(){
+                for (let i = 0; i< this.nodes.length; i++)
+                    for (let k = 0; k < this.nodes[i].length; k++)
+                        console.log(String.fromCharCode(97 + i) + " " + String.fromCharCode(this.nodes[i][k].name + 97) + " " + this.nodes[i][k].weight);
+                console.log();
+            }
+        }
+
+        class Node {
+            constructor(name, weight){
+                this.name = name;
+                this.weight = weight;
+            }
+
+            compare(o1, o2){
+                if (o1.weight < o2.weight){
+                    return -1;
+                }
+                if(o1.weight > o2.weight){
+                    return 1;
+                }
+                return 0;
+            }
+        }
+
+
+        class Model {
+            constructor() {
+                this.MAP_SIZE = 10;
+                this.count = 0;
+                this.Circles = [];
+                this.ending = false;
+                this.Lines = [];
+                this.lncount = 0;
+                this.graph = new Graph();
+                this.animate = false;
+            }
+
+            DirectCollision(circle, x, y){
+                if (25 > Math.pow(Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2), .5)){
+                    circle.clickcount++;
+                    circle.setOrange();
+                    return true;
+                }
+                return false;
+            }
+
+            OverLapCollision(circle, x, y){
+                return 50 > Math.pow(Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2), .5);
+            }
+
+            update(x, y){
+                if (!this.ending)
+                    this.DrawCircle(x,y);
+                else
+                    this.setStartEnd(x,y);
+            }
+
+            setStartEnd(x, y){
+                let collision = false;
+                for (let i = 0; i < this.Circles.length; i++){
+                if (this.DirectCollision(this.Circles[i],x,y)){
+                    this.Circles[i].clickcount++;
+                    collision = true;
+                    if(this.graph.start === ' ')
+                        this.graph.start = this.Circles[i].name;
+                    else{
+                        this.graph.end = this.Circles[i].name;
+                        console.log("start: " + this.graph.start + " End: " + this.graph.end)
+                        console.log("Graph Size: " + this.graph.nodes.length)
+                        this.graph.PrintNodes();
+                        this.animate = true;
+                    }
+                }
+                }
+                if(!collision)
+                    for (let i = 0; i < this.Circles.length; i++)
+                        this.Circles[i].clickcount = 0;
+            }
+
+            DrawLine(){
+                let num1 = -1;
+                let num2 = -1;
+                for (let i = 0; i < this.Circles.length; i++){
+                    if(this.Circles[i].clickcount !== 0 && num1 === -1)
+                        num1 = i;
+                    else if (this.Circles[i].clickcount !== 0)
+                        num2 = i;
+                }
+                if (num1 !== -1 && num2 !== -1) {
+                    this.Lines[this.lncount] = (new Line(this.Circles[num1].x, this.Circles[num1].y, this.Circles[num2].x, this.Circles[num2].y))
+
+                    this.Lines[this.lncount].connects[0] = this.Circles[num1].name;
+                    this.Lines[this.lncount].connects[1] = this.Circles[num2].name;
+                    this.Circles[num1].clickcount = 0;
+                    this.Circles[num2].clickcount = 0;
+                    this.graph.createNode((this.Circles[num1].name).charCodeAt(0)-97, (this.Circles[num2].name).charCodeAt(0)-97, this.Lines[this.lncount].weight)
+                    this.lncount++;
+                    for (let i = 0; i < this.Circles.length; i++){
+                        this.Circles[i].setBlue();
+                    }
+
+                }
+
+            }
+
+            DrawCircle(x,y){
+                let collision = false;
+                for (let i = 0; i < this.count; i++){
+                    if (this.DirectCollision(this.Circles[i],x,y)){
+                        this.DrawLine();
+                        collision = true;
+                        if(this.Circles[i].clickcount >=2){
+                            for (let j = i; j < this.count-1; j++)
+                                this.Circles[j] = this.Circles[j+1]
+                            this.count--;
+                        }
+                    }
+                    else if(this.OverLapCollision(this.Circles[i], x, y)) {
+                        collision = true;
+                    }
+                    }
+                    if (!collision)
+                        for (let i = 0; i < this.count; i++) {
+                            this.Circles[i].clickcount = 0;
+                            this.Circles[i].setBlue();
+                        }
+                        if (this.count < this.MAP_SIZE && !collision){
+                            this.Circles[this.count] = new Circle(x,y,this.count);
+                            this.count++;
+                        }
+                }
+
+                SettledVis(node){
+                    for (let i = 0; i < this.Circles.length; i++){
+                        if (this.Circles[i] != null && String.fromCharCode(node.name + 97) === this.Circles[i].name){
+                            console.log("SetRed ");
+                            this.Circles[i].setRed();
+                        }
+                    }
+                }
+
+        }
+
+        class PriorityQueue{
+            constructor(){
+                this.queue = [];
+                this.round = [];
+            }
+
+            push(node, round){
+                let last = false;
+                for (let i = 0; i < this.queue.length; i++){
+                    if(this.queue[i].weight > node.weight && this.round[i] > round){
+                        this.queue.splice(i,0,node);
+                        this.round.splice(i,0,round);
+                        last = true;
+                        break;
+                    }
+                }
+                if(!last){
+                    this.queue.push(node);
+                    this.round.push(round);
+                    }
+            }
+
+            pop(){
+                if(this.queue.length > 0) {
+                    this.round.shift();
+                    return this.queue.shift();
+                }
+                else
+                    console.log("Underflow");
+            }
+            print(){
+                for (let i = 0; i < this.queue.length; i++){
+                    console.log("Priority queue: " + this.queue[i].name);
+                }
+            }
+        }
+
+        class Dijkstra {
+            constructor(vert){
+                this.vert = vert-1;
+                this.settledvis = [];
+                this.neighborsvis = [];
+                this.dist = [];
+                this.round = 0;
+                this.settled = new Set();
+                this.pq = new PriorityQueue();
+                this.adj = [[]];
+            }
+            /*
+
+
+             */
+            Dijkstra(adj,src){
+
+                this.adj = adj;
+                for (let i = 0; i < this.vert; i++)
+                    this.dist.push(Number.MAX_SAFE_INTEGER)
+                this.pq.push(new Node(src, 0));
+                this.dist[src] = 0;
+                while(this.settled.size !== this.vert){
+                    let v = this.pq.pop();
+                    let u = v.name;
+                    this.settledvis.push(v);
+                    this.settled.add(parseInt(u,10));
+                    this.Neighbours(u);
+                    this.round++;
+                }
+
+            }
+            Neighbours(u){
+                let weightDistance = -1;
+                let newDistance = -1;
+
+                for (let i = 0; i < this.adj[u].length; i++){
+                    let v = this.adj[u][i];
+
+                    if (!this.settled.has(v.name)){
+                        this.neighborsvis.push(v);
+                        weightDistance = v.weight;
+                        newDistance = this.dist[u] + weightDistance;
+
+                        if(newDistance < this.dist[v.name])
+                            this.dist[v.name] = newDistance;
+                        this.pq.push(new Node(v.name, this.dist[v.name]), this.round);
+                    }
+
+                }
+            }
+
+            ShortestPath(graph, start, end){
+                let source = start;
+                this.Dijkstra(graph, source);
+                console.log("the shortest path from node : ");
+                for (let i = 0; i < this.dist.length; i++){
+                    console.log(String.fromCharCode(source + 97) + " to " + String.fromCharCode(i + 97)  + " is " + this.dist[i]);
+                }
+                for (let i = 0; i < this.settledvis.length; i++){
+                    console.log("Settled: " + String.fromCharCode(this.settledvis[i].name + 97));
+                }
+                return this.settledvis;
+            }
+        }
+
+        class Visualize{
+            constructor(v){
+                this.view = v;
+                this.anim = false;
+                this.visual = [];
+                this.count = 0;
+            }
+            start(){
+                this.anim = true;
+                let d = new Dijkstra(this.view.model.graph.nodes.length);
+                this.visual = d.ShortestPath(this.view.model.graph.nodes, this.view.model.graph.start.charCodeAt(0) -97, this.view.model.graph.end.charCodeAt(0) - 97);
+            }
+
+            play(){
+                this.view.model.SettledVis(this.visual[this.count]);
+                this.count++;
+            }
+        }
+
+        class Controller{
+            constructor(v){
+                this.animate = v;
+                let self = this;
+                this.animate.view.canvas.addEventListener("click", function(event) { self.onClick(event); });
+            }
+
+            onClick(event){
+                this.animate.view.model.update(event.pageX - this.animate.view.canvas.offsetLeft, event.pageY - this.animate.view.canvas.offsetTop)
+                if (this.animate.view.model.animate === true)
+                    this.animate.start();
+            }
+
+            update(){
+                ;
+            }
+        }
+
+
+        class View {
+            constructor(m){
+                this.model = m;
+                this.canvas = document.getElementById("myCanvas");
+            }
+
+            update(){
+                let ctx = this.canvas.getContext("2d");
+                ctx.rect(0,0,500,500);
+                ctx.fillStyle = 'rgb(210,180,140)';
+                ctx.fill();
+
+                for (let i = 0; i < this.model.Lines.length; i++){
+                    let line = this.model.Lines[i];
+                    ctx.beginPath();
+                    ctx.moveTo(line.x1, line.y1);
+                    ctx.lineTo(line.x2,line.y2);
+                    ctx.stroke();
+                    ctx.font = '12px serif';
+                    ctx.fillStyle = 'rgb(0,0,0)';
+                    ctx.fillText(line.weight,line.txtcords[0]-3,line.txtcords[1]+3);
+                }
+
+
+                for (let i = 0; i < this.model.Circles.length; i++){
+                    let circle = this.model.Circles[i];
+                    ctx.beginPath();
+                    ctx.arc(circle.x, circle.y, 25, 0, 2 *Math.PI, false);
+                    ctx.fillStyle = circle.color;
+                    ctx.stroke();
+                    ctx.fill();
+                    ctx.font = '12px serif';
+                    ctx.fillStyle = 'rgb(0,0,0)';
+                    ctx.fillText(circle.name,circle.x-3,circle.y+3);
+                }
+            }
+        }
+
+        class Game{
+            constructor(){
+                this.model = new Model();
+                this.view = new View(this.model);
+                this.animate = new Visualize(this.view);
+                this.controller = new Controller(this.animate);
+            }
+
+            sleep(milli){
+                var start = new Date().getTime();
+                for (var i = 0; i < 1e7; i++){
+                    if((new Date().getTime() - start) > milli){
+                        break;
+                    }
+                }
+            }
+
+            onTimer(){
+                if(this.animate.anim === true) {
+                    this.animate.play();
+                    this.controller.update();
+                    this.view.update();
+                    this.sleep(1000);
+                }
+                else {
+                    this.controller.update();
+                    this.view.update();
+                }
+            }
+        }
+
+        let game = new Game();
+        let timer = setInterval(function() { game.onTimer(); }, 60);
+        function Start(){
+            game.model.ending = true;
+        }
+
+    </script>
+</canvas>
+<button type="button" onclick="Start()">Start Dijkstras!</button>
+</body>
+</html>
+

@@ -11,11 +11,17 @@ public class Dijkstra {
     private int vert;
     List<List<Node>> adj;
 
+    View view;
+
     public Dijkstra(int vert){
-        this.vert = vert;
-        dist = new int[vert];
+        this.vert = vert-1;
+        dist = new int[this.vert];
         settled = new HashSet<Integer>();
         pq = new PriorityQueue<Node>(vert,new Node());
+    }
+
+    public void setView(View v){
+        this.view = v;
     }
 
     public void Dijkstra(List<List<Node>> adj, int src){
@@ -28,8 +34,10 @@ public class Dijkstra {
         dist[src] = 0;
 
         while (settled.size() != vert){
-            int u = pq.remove().name;
+            Node v = pq.remove();
+            int u = v.name;
             settled.add(u);
+            System.out.println("settled : " + (char)(v.name + 'a'));
             Neighbours(u);
         }
 
@@ -38,10 +46,10 @@ public class Dijkstra {
     private void Neighbours(int u){
         int weightDistance = -1;
         int newDistance = -1;
-
+        // Iterates through connecting nodes
         for (int i = 0; i < adj.get(u).size(); i++){
             Node v = adj.get(u).get(i);
-
+            v.PrintNode();
             if (!settled.contains(v.name)){
                 weightDistance = v.weight;
                 newDistance = dist[u] + weightDistance;
@@ -55,7 +63,6 @@ public class Dijkstra {
     }
 
     void ShortestPath(List<List<Node>> graph, char start){
-        vert =  graph.size()-1;
         int source = 'a' - start;
         Dijkstra(graph, source);
         System.out.println("The shortest path from node : ");

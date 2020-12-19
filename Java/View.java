@@ -38,6 +38,7 @@ public class View extends JPanel {
             this.add(model.Lines[i].weight_text);
         }
         for (int i = 0; i < model.count; i++) {
+            System.out.println("Painting: ");
             model.Circles[i].Draw(g);
             this.add(model.Circles[i].text);
         }

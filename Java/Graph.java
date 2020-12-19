@@ -49,4 +49,8 @@ class Node implements Comparator<Node> {
             return 1;
         return 0;
     }
+
+    void PrintNode(){
+        System.out.println("Node name: " + (char)(name + 'a') + " Weight: " + weight);
+    }
 }

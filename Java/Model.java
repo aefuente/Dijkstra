@@ -6,6 +6,7 @@ public class Model {
     int count;
     int lncount;
     boolean ending;
+    boolean animate;
 
 
     Model() {
@@ -15,12 +16,14 @@ public class Model {
         ending = false;
         Lines = new Shapes.Line[90];
         graph = new Graph();
+        animate = false;
     }
 
 
     boolean DirectCollision(Shapes.Circle circle, int x, int y) {
         if (25 > Math.pow(Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2), .5)) {
             circle.clickcount++;
+            circle.SetOrange();
             return true;
         }
         return false;
@@ -30,6 +33,7 @@ public class Model {
     boolean OverLapCollision(Shapes.Circle circle, int x, int y) {
         return 50 > Math.pow(Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2), .5);
     }
+
 
 
     void DrawLine() {
@@ -67,6 +71,7 @@ public class Model {
     }
 
 
+
     public void SetStartEnd(int x, int y){
         boolean collision = false;
         for (int i = 0; i < count; i++) {
@@ -78,8 +83,11 @@ public class Model {
                 else {
                     graph.end = Circles[i].name;
                     System.out.println("start: " + graph.start + " End: " + graph.end);
-                    Dijkstra dijkstra = new Dijkstra(graph.nodes.size()-1);
-                    dijkstra.ShortestPath(graph.nodes, graph.start);
+                    System.out.println("Graph Size: " + graph.nodes.size());
+                    System.out.println("Graph nodes: \n");
+                    graph.PrintNodes();
+                    animate = true;
+
                 }
             }
         }
@@ -110,6 +118,15 @@ public class Model {
         if (count < MAP_SIZE && !collision) {
             Circles[count] = new Shapes.Circle(x, y, count);
             count++;
+        }
+    }
+
+    public void SettledVis(Node node){
+        for (int i = 0; i < Circles.length; i++){
+            if (Circles[i]!= null && (char)(node.name + 'a') == Circles[i].name){
+                System.out.println("I'm Set red: " + Circles[i].name);
+                Circles[i].SetRed();
+            }
         }
     }
 }
