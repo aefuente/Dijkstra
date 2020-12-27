@@ -1,6 +1,5 @@
 class Dijkstra {
     constructor(vert){
-        this.path = [];
         this.vert = vert-1;
         this.settledvis = [];
         this.dist = [];
@@ -11,7 +10,7 @@ class Dijkstra {
         this.prev = null;
     }
 
-    // Figure out a way to make previous point to the proper node.
+
     Dijkstra(adj,src){
 
         this.adj = adj;
@@ -24,7 +23,6 @@ class Dijkstra {
             let u = v.node.name;
             this.settledvis.push([]);
             this.settledvis[this.round].push(v);
-            //console.log("Setting " + String.fromCharCode(v.name + 97ß) + " Weight " +v.weight );
             this.settled.add(parseInt(u,10));
             this.Neighbours(v);
             this.round++;
@@ -40,47 +38,39 @@ class Dijkstra {
             let v = this.adj[u.node.name][i];
 
             if (!this.settled.has(v.name)){
-                //console.log("Checking " + String.fromCharCode(v.name + 97) + " Weight " + v.weight);
                 weightDistance = v.weight;
                 newDistance = this.dist[u.node.name] + weightDistance;
 
                 if(newDistance < this.dist[v.name])
                     this.dist[v.name] = newDistance;
-                let tmp = new NodePath(v,prev, newDistance);
-                this.settledvis[this.round].push(tmp);
-                this.pq.push(tmp, this.round);
+                this.settledvis[this.round].push(new NodePath(v,prev, prev.totalweight + v.weight));
+                //this.pq.push(new NodePath(v,prev, this.dist[v.name], this.round));
+                this.pq.push(new NodePath(v,prev, this.dist[v.name]));
             }
         }
     }
 
+
     getPath(start, end){
         let back;
+        let path = [];
         console.log("Searching weight: " + this.dist[end]);
         for (let i = 0; i < this.settledvis.length; i++){
-            for (let j = 0; j < this.settledvis[i].length; j++){
-                if (this.settledvis[i][j].node.name === end && this.settledvis[i][j].totalweight === this.dist[end]){
-                    back = this.settledvis[i][j];
-                    i = this.settledvis.length;
+                if (this.settledvis[i][0].node.name === end && this.settledvis[i][0].totalweight === this.dist[end]){
+                    back = this.settledvis[i][0];
                     break;
-                }
             }
         }
-        console.log("Array: ");
-        for (let i = 0; i < this.settledvis.length; i++){
-            for (let j = 0; j < this.settledvis[i].length; j++){
-                console.log(String.fromCharCode(this.settledvis[i][j].node.name + 97) + " Total weight: " + this.settledvis[i][j].totalweight);
 
-            }
-            console.log("new line");
-        }
         console.log("Path: ");
-        this.path.push(back);
+        path.push(back);
         console.log(String.fromCharCode(back.node.name +97));
         while(back.prev != null){
-            this.path.push(back.prev);
+            path.push(back.prev);
             console.log(String.fromCharCode(back.prev.node.name +97));
             back = back.prev;
         }
+        return path;
     }
 
     ShortestPath(graph, start, end){
@@ -90,7 +80,6 @@ class Dijkstra {
         for (let i = 0; i < this.dist.length; i++){
             console.log(String.fromCharCode(source + 97) + " to " + String.fromCharCode(i + 97)  + " is " + this.dist[i]);
         }
-        this.getPath(start,end);
         return this.settledvis;
     }
 }
