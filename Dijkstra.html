@@ -1,27 +1,55 @@
 
 <html>
+<link rel="stylesheet" href="Dijkstra.css">
 <head><title>Dijkstras! </title></head>
 <body>
-<h1>Dikjstra visualized </h1>
-<p>Draw a weighted graph then watch Dijkstras happen.</p> <ul>
-    <li>When you would like to place a node, click anywhere inside of the colored colored box.</li>
-    <li>If you would like to remove a node, just double click on the node.</li>
-    <li>When you would like to connect two nodes, click one node then the other. This generates a line between the two nodes
-        with a random weight.</li>
-    <li>When your graph is ready, you can start Dijkstras by hitting the start Dijkstras button, and clicking on the
-        first starting node then the ending node.</li>
-    <li>Once the animation has run and you have your path, you can click on other red/green nodes to see other paths computed up to the ending node you selected.</li>
-</ul>
-<p>Legend: </p>
-<ul>
-    <li><div style="float:left;width:20px;height:20px;margin-right:5px;background:#00FFFF;"></div>No action has been taken on this node.</li><br>
-    <li><div style="float:left;width:20px;height:20px;margin-right:5px;background:#0000FF;"></div>Node was scanned.</li><br>
-    <li><div style="float:left;width:20px;height:20px;margin-right:5px;background:#FF0000;"></div>Node was set.</li><br>
-    <li><div style="float:left;width:20px;height:20px;margin-right:5px;background:#00FF00;"></div>Part of path.</li><br>
-    <li><div style="float:left;width:20px;height:20px;margin-right:5px;background:#FF6600;"></div>Selected node.</li><br>
-</ul>
+<div id="Title">
+    <div id="heading">
+<h1>Dikjstra Visualized </h1>
+<p id="intro">Draw a weighted graph and watch Dijkstras happen.</p>
+    <p id="Author">Author: Andre Fuentes</p>
+    </div>
+    <div id="line">
+    <h2>Instructions:</h2>
+    <div id="inst">
+        <div id="stepone">
+            <img id="one" src="Circle.png" alt="Step1">
+            <p id="onetext">When you would like to place a node, click anywhere inside of the colored colored box.</p>
+        </div>
+        <div id="steptwo">
+            <img src="Circle2.png">
+    <p>If you would like to remove a node, just double click on the node.</p>
+        </div>
+        <div id="stepthree">
+            <img src="Circle3.png">
+    <p>When you would like to connect two nodes, click one node then the other. This generates a line between the two nodes
+        with a random weight.</p>
+        </div>
+        <div id="stepfour">
+            <img src="Circle4.png">
+    <p>When your graph is ready, you can start Dijkstras by hitting the start Dijkstras button, and clicking on the
+        first starting node then the ending node.</p>
+        </div>
+        <div id="stepfive">
+            <img src="Circle5.png">
+    <p>Once the animation has run and you have your path, you can click on other red/green nodes to see other paths computed up to the ending node you selected.</p>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="interactive">
+<div id="Legend">
+<h3>Legend: </h3>
+    <div class="legend" style="background:#00FFFF;"></div><p class="bullet">No action has been taken on this node.</p><br>
+    <div class="legend" style="background:#2e58d2;"></div><p class="bullet">Node was scanned.</p><br>
+    <div class="legend" style="background:#fd1d1d;"></div><p class="bullet">Node was set.</p><br>
+    <div class="legend" style="background:#fff62c;"></div><p class="bullet">Part of path.</p><br>
+    <div class="legend" style="background:#FF6600;"></div><p class="bullet">Selected node.</p><br>
 <p>This algorithm stops once the ending node has been found, but will re-run if the user selects a node that has not been settled yet.</p>
-<canvas id="myCanvas" width="1000" height="475" style="border:1px solid #cccccc;">
+</div>
+<div id="Dijkstras">
+<canvas id="myCanvas" height="475" style="border:1px solid #cccccc;">
     <script type="text/javascript" src="Visualize.js"></script>
     <script type="text/javascript" src="View.js"></script>
     <script type="text/javascript" src="Model.js"></script>
@@ -30,9 +58,10 @@
     <script type="text/javascript" src="Dijkstra.js"></script>
     <script type="text/javascript" src="Game.js"></script>
 </canvas>
-<button type="button" id="start" onclick="Start()">Start Dijkstras!</button>
-<br>
-<ul id="distance"></ul>
+    <button type="button" id="start" onclick="Start()">Start Dijkstras!</button>
+</div>
+    <div id="list"><p>Shortest distance to nodes:</p><ul id="distance"></ul></div>
+</div>
 </body>
 </html>
 

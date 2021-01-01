@@ -7,10 +7,13 @@ class View {
     update(){
         let ctx = this.canvas.getContext("2d");
         // Canvas size
-        ctx.rect(0,0,1000,500);
-        // Sets a tan background
-        ctx.fillStyle = 'rgb(210,180,140)';
-        ctx.fill();
+        let w = window.innerWidth- 400 - 500;
+        if(w < 500)
+            w = 500;
+        document.getElementById("myCanvas").setAttribute("width",w.toString());
+        console.log(w);
+        ctx.rect(0,0,w,500);
+
 
         // Draws the lines
         for (let i = 0; i < this.model.Lines.length; i++){

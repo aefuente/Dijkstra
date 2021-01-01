@@ -1,0 +1,149 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background: black no-repeat fixed;
+}
+#inst{
+    min-width:1400px;
+    padding-top:5px;
+    padding-left:5%;
+    font-family: Tahoma;
+    font-size:18px;
+    color:white;
+}
+
+h2{
+    padding-top:1%;
+    padding-left:2.5%;
+    font-family: Tahoma;
+    font-size: 22px;
+    color:white;
+}
+
+p{
+    padding-left: 1%;
+    vertical-align: middle;
+}
+img{
+    vertical-align: middle;
+    width:25px;
+    height:25px;
+}
+
+#stepone img,p{
+    display:inline-block;
+}
+
+#heading{
+    height: 125px;
+    text-align: center;
+    min-width: 1500px;
+    color:white;
+    font-size:24px;
+    background: rgb(141,156,207);
+    background: linear-gradient(180deg, rgba(141,156,207,1) 0%, rgba(150,144,211,1)100%);
+}
+
+#intro{
+    font-size:24px;
+}
+
+#heading h1,#intro,#author{
+    width: 30%;
+    display: inline-block;
+    vertical-align: bottom;
+
+
+}
+#heading:after{
+    width:100%;
+    display:inline-block;
+}
+
+#myCanvas{
+    background: #ac72d2;
+}
+
+#interactive{
+    width:100%;
+    background: rgb(184,130,212);
+    background: linear-gradient(180deg, rgba(184,130,212,1) 0%, rgba(125,112,145,1) 2%, rgba(0,0,0,1) 3%);
+}
+#interactive, #Legend, #Dijkstras, #list{
+    padding-top:1%;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+#list{
+    color: white;
+    font-family: Tahoma;
+    margin-left:30px;
+    height:475px;
+    width:250px;
+    padding:10px;
+    background-color: #8d9ccf;
+    box-shadow: 5px 5px 5px grey;
+}
+#Dijkstras{
+    min-width: 500px;
+}
+
+#Legend{
+    width: 400px;
+    min-width: 400px;
+    margin-top:-30px;
+}
+
+
+
+
+
+h3{
+    padding-left:12%;
+    padding-top:20px;
+    color:white;
+    font-family: Tahoma;
+    font-size: 22px;
+}
+#line{
+    min-width: 1500px;
+    width: 100%;
+    background: rgb(141,156,207);
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(150,144,211,1) 1%, rgba(162,128,215,1) 32%, rgba(184,130,212,1) 100%);
+
+}
+#start{
+    width:125px;
+}
+
+
+#Title{
+    width:100%;
+    padding-top:10px;
+    padding-bottom:10px;
+    background: rgb(141,156,207);
+    background: linear-gradient(180deg, rgba(141,156,207,1) 0%, rgba(162,128,215,1) 56%, rgba(184,130,212,1) 100%);
+
+}
+
+.legend{
+    margin-left:20%;
+    margin-right:5px;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
+.legend,.bullet{
+    vertical-align: middle;
+    display:inline-block;
+}
+
+.bullet{
+    color:white;
+    font-family: Tahoma;
+    font-size: 15px;
+}

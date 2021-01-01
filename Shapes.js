@@ -69,13 +69,13 @@ class Line {
 
 
             setRed(){
-                this.color = 'rgb(255,0,0)';
+                this.color = 'rgb(253, 29, 29)';
             }
             setDarkBlue(){
-                this.color = 'rgb(0,0,255)';
+                this.color = 'rgb(46, 88, 210)';
             }
             setGreen(){
-                this.color = 'rgb(0,255,0)';
+                this.color = 'rgb(255, 246, 44)';
             }
         }
 
@@ -89,7 +89,7 @@ class Line {
             }
 
             setRed(){
-                this.color = 'rgb(255,0,0)';
+                this.color = 'rgb(253, 29, 29)';
             }
 
             setOrange(){
@@ -100,9 +100,9 @@ class Line {
             }
 
             setDarkBlue(){
-                this.color = 'rgb(0,0,255)'
+                this.color = 'rgb(46, 88, 210)'
             }
             setGreen(){
-                this.color = 'rgb(0,255,0)';
+                this.color = 'rgb(255, 246, 44)';
             }
         }
