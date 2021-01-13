@@ -8,10 +8,9 @@ class View {
         let ctx = this.canvas.getContext("2d");
         // Canvas size
         let w = window.innerWidth- 400 - 500;
-        if(w < 500)
-            w = 500;
+        if(w < 650)
+            w = 650;
         document.getElementById("myCanvas").setAttribute("width",w.toString());
-        console.log(w);
         ctx.rect(0,0,w,500);
 
 
